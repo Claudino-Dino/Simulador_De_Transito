@@ -31,7 +31,7 @@ public class Dijkstra {
             ListaEncadeada<Rua> adjacentes = grafo.obterArestasDe(atual);
             for (int i = 0; i < adjacentes.tamanhoLista(); i++) {
                 Rua aresta = adjacentes.obter(i);
-                Intersecao vizinho = aresta.noDestino;
+                Intersecao vizinho = aresta.intercesaoDestino;
                 if (!visitados.contains(vizinho)) {
                     int novaDist = distancias.get(atual) + aresta.comprimento;
                     if (novaDist < distancias.get(vizinho)) {

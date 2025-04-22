@@ -5,8 +5,8 @@ import simulador.estruturas.No;
 import simulador.trafego.Veiculo;
 
 public class Rua {
-    public Intersecao noOrigem;
-    public Intersecao noDestino;
+    public Intersecao intercesaoOrigem;
+    public Intersecao intercesaoDestino;
     public int comprimento;
     public double velocidadeMedia;
     public String direcao;
@@ -15,16 +15,16 @@ public class Rua {
     public FilaEncadeada<Veiculo> qtdeCarrosAresta;
 
     public Rua(
-            Intersecao noOrigem,
-            Intersecao noDestino,
+            Intersecao intercesaoOrigem,
+            Intersecao intercesaoDestino,
             String direcao,
             int comprimento,
             double velocidadeMedia,
             int capacidadeDeFluxo
 
     ) {
-        this.noOrigem = noOrigem;
-        this.noDestino = noDestino;
+        this.intercesaoOrigem = intercesaoOrigem;
+        this.intercesaoDestino = intercesaoDestino;
         this.direcao = direcao;
         this.comprimento = comprimento;
         this.velocidadeMedia = velocidadeMedia;
@@ -45,12 +45,12 @@ public class Rua {
         qtdeCarrosAresta.desenfileirar();
     }
 
-    public Intersecao getNoOrigem() {
-        return this.noOrigem;
+    public Intersecao getIntercesaoOrigem() {
+        return this.intercesaoOrigem;
     }
 
-    public Intersecao getNoDestino() {
-        return this.noDestino;
+    public Intersecao getIntercesaoDestino() {
+        return this.intercesaoDestino;
     }
 
     public double getTempoDeTravessia() {

@@ -41,7 +41,6 @@ public class GeradorVeiculos {
 
     }
 
-
     public ListaEncadeada<Intersecao> obterIntercesaoPeso(int valor) {
         NoDuplo<Intersecao> noAtual = intercesoes.head;
         ListaEncadeada<Intersecao> resposta = new ListaEncadeada<>();

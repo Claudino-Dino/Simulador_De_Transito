@@ -12,8 +12,8 @@ public class Grafo {
 
         NoDuplo<Rua> noAtual = getRuas().head;
         while (noAtual != null) {
-            if (noAtual.conteudo.noOrigem == i) {
-                rua.adicionar(noAtual, 0);
+            if (noAtual.conteudo.intercesaoOrigem == i) {
+                rua.enfileirar(noAtual);
             }
             noAtual = noAtual.proximo;
         }
@@ -28,6 +28,18 @@ public class Grafo {
 
     public ListaEncadeada<Rua> getRuas() {
         return ruas;
+    }
 
+    public void conectarNos(Intersecao origem, Intersecao destino, String direcao, int comprimento, double velocidadeMedia, int capacidadeDeFluxo) {
+        NoDuplo<Rua> noRuaLigarNos = new NoDuplo<>(new Rua(
+                origem,
+                destino,
+                direcao,
+                comprimento,
+                velocidadeMedia,
+                capacidadeDeFluxo
+        ));
+
+        ruas.adicionar(noRuaLigarNos, 1);
     }
 }
