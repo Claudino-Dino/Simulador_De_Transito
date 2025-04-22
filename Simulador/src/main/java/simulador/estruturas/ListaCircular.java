@@ -32,16 +32,6 @@ public class ListaCircular<T> {
         return false;
     }
 
-    public T getProximo() {
-        if (estaVazia(this.atual)) {
-            return null;
-        }
-
-        this.atual = atual.proximo;
-        T conteudo = this.atual.getConteudo();
-        return conteudo;
-    }
-
     public T getAtual() {
         return (atual != null) ? this.atual.getConteudo() : null;
     }

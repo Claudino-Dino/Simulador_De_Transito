@@ -3,8 +3,13 @@ package simulador.semaforo;
 import simulador.estruturas.ListaCircular;
 import simulador.estruturas.No;
 
+import javax.print.DocFlavor;
+
 public class Semaforo {
     public ListaCircular<String> estados;
+    private int tempoVerde;
+    private int tempoAmarelo;
+    private int tempoVermelho;
 
     public Semaforo() {
         estados = new ListaCircular<>();
@@ -18,13 +23,39 @@ public class Semaforo {
         }
     }
 
+
+    public String ficarVermelho(){
+        while (!estados.getAtual().equals("VERMELHO")){
+            mudarEstado();
+        }
+
+        return estados.getAtual();
+    }
+
+    public String ficarVerde(){
+        while (!estados.getAtual().equals("VERDE")){
+            mudarEstado();
+        }
+
+        return estados.getAtual();
+    }
+
+    public String ficarAmarelo(){
+        while (!estados.getAtual().equals("AMARELO")){
+            mudarEstado();
+        }
+
+        return estados.getAtual();
+    }
+
     public void semaforoAbrir() {
         try {
-            System.out.println(this.getConteudoAtual());
-            Thread.sleep(3000);
-            this.mudarEstado();
-            System.out.println(this.getConteudoAtual());
-            Thread.sleep(2800);
+            ficarVermelho();
+            Thread.sleep(this.tempoVermelho);
+
+            ficarVerde();
+            Thread.sleep(this.tempoVerde);
+
         } catch (InterruptedException e) {
             System.out.println("Execução do sinal interrompida!");
         }
@@ -32,10 +63,10 @@ public class Semaforo {
 
     public void semaforoFechar() {
         try {
-            this.mudarEstado();
-            System.out.println(this.getConteudoAtual());
-            Thread.sleep(600);
-            this.mudarEstado();
+
+            ficarAmarelo();
+            Thread.sleep(this.tempoAmarelo);
+
         } catch (InterruptedException e) {
             System.out.println("Execução do sinal interrompida!");
         }
