@@ -10,7 +10,7 @@ public class ControladorSemaforos {
     public Enum modoOperacaoAtual;
     public Semaforo s1, s2;
 
-    public ControladorSemaforos(Enum modo =) {
+    public ControladorSemaforos(Enum modo) {
         modosOreperacao.adicionar(new No<>(CICLO_FIXO));
         modosOreperacao.adicionar(new No<>(TEMPO_ESPERA));
         modosOreperacao.adicionar(new No<>(CONSUMO));
