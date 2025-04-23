@@ -3,45 +3,44 @@ package simulador.semaforo;
 import simulador.estruturas.ListaCircular;
 import simulador.estruturas.No;
 
-import javax.print.DocFlavor;
-
 public class Semaforo {
     public ListaCircular<String> estados;
     private int tempoVerde;
     private int tempoAmarelo;
     private int tempoVermelho;
 
-    public Semaforo() {
+    public Semaforo(int tmpVerde, int tmpAmarelo, int tmpVermelho) {
         estados = new ListaCircular<>();
 
         estados.adicionar(new No("VERMELHO"));
         estados.adicionar(new No("VERDE"));
         estados.adicionar(new No("AMARELO"));
 
-        while (!estados.atual.getConteudo().equals("VERMELHO")) {
-            estados.proximo();
-        }
+        tempoVerde = tmpVerde;
+        tempoAmarelo = tmpAmarelo;
+        tempoVermelho = tmpVermelho;
+
     }
 
 
-    public String ficarVermelho(){
-        while (!estados.getAtual().equals("VERMELHO")){
+    public String ficarVermelho() {
+        while (!estados.getAtual().equals("VERMELHO")) {
             mudarEstado();
         }
 
         return estados.getAtual();
     }
 
-    public String ficarVerde(){
-        while (!estados.getAtual().equals("VERDE")){
+    public String ficarVerde() {
+        while (!estados.getAtual().equals("VERDE")) {
             mudarEstado();
         }
 
         return estados.getAtual();
     }
 
-    public String ficarAmarelo(){
-        while (!estados.getAtual().equals("AMARELO")){
+    public String ficarAmarelo() {
+        while (!estados.getAtual().equals("AMARELO")) {
             mudarEstado();
         }
 
@@ -50,9 +49,6 @@ public class Semaforo {
 
     public void semaforoAbrir() {
         try {
-            ficarVermelho();
-            Thread.sleep(this.tempoVermelho);
-
             ficarVerde();
             Thread.sleep(this.tempoVerde);
 
@@ -63,9 +59,11 @@ public class Semaforo {
 
     public void semaforoFechar() {
         try {
-
             ficarAmarelo();
             Thread.sleep(this.tempoAmarelo);
+
+            ficarVermelho();
+            Thread.sleep(tempoVermelho);
 
         } catch (InterruptedException e) {
             System.out.println("Execução do sinal interrompida!");
