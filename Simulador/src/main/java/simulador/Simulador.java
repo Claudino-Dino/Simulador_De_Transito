@@ -1,15 +1,13 @@
 package simulador;
 
 import simulador.cidade.Grafo;
-import simulador.cidade.Intersecao;
-import simulador.cidade.Rua;
-import simulador.semaforo.Semaforo;
+import simulador.semaforo.ControladorSemaforos;
 import simulador.trafego.GeradorVeiculos;
-import simulador.trafego.Veiculo;
-
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static simulador.semaforo.ModoOperacao.*;
 
 public class Simulador implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -26,11 +24,8 @@ public class Simulador implements Serializable {
                     tempoSimulado++;
                     atualizarSimulacao();
 
-                    Intersecao i1 = new Intersecao(0, 1, 0, false);
-                    Intersecao i2 = new Intersecao(1, 1, 0, false);
-                    Semaforo s1 = new Semaforo();
-                    Rua rua = new Rua(i1, i2, "UNICA", 300, 50, 20);
                     Grafo grafo = new Grafo();
+                    ControladorSemaforos controladorSemaforos = new ControladorSemaforos(CICLO_FIXO);
                     GeradorVeiculos geradorVeiculos = new GeradorVeiculos(grafo);
 
                     try {

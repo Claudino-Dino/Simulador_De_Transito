@@ -40,6 +40,5 @@ public class Grafo {
                 capacidadeDeFluxo
         ));
 
-        ruas.adicionar(noRuaLigarNos, 1);
     }
 }
