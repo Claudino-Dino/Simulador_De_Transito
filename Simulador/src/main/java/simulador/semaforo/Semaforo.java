@@ -78,4 +78,17 @@ public class Semaforo {
         estados.proximo();
         return estados.getAtual();
     }
+
+    public void setTempoVerde(int tempo) {
+        this.tempoVerde=tempo;
+    }
+
+    public void setTempoVermelho(int tempo) {
+        this.tempoVermelho=tempo;
+    }
+
+    public void setTempoAmarelo(int tempo) {
+        this.tempoAmarelo=tempo;
+    }
+
 }
