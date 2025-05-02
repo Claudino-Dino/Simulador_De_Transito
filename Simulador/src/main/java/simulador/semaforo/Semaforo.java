@@ -8,8 +8,9 @@ public class Semaforo {
     private int tempoVerde;
     private int tempoAmarelo;
     private int tempoVermelho;
+    private boolean estaAberto;
 
-    public Semaforo(int tmpVerde, int tmpAmarelo, int tmpVermelho) {
+    public Semaforo(int tmpVerde, int tmpAmarelo) {
         estados = new ListaCircular<>();
 
         estados.adicionar(new No("VERMELHO"));
@@ -18,7 +19,7 @@ public class Semaforo {
 
         tempoVerde = tmpVerde;
         tempoAmarelo = tmpAmarelo;
-        tempoVermelho = tmpVermelho;
+        tempoVermelho = tmpVerde + tmpAmarelo;
 
     }
 
@@ -52,6 +53,9 @@ public class Semaforo {
             ficarVerde();
             Thread.sleep(this.tempoVerde);
 
+            ficarAmarelo();
+            Thread.sleep(this.tempoAmarelo);
+
         } catch (InterruptedException e) {
             System.out.println("Execução do sinal interrompida!");
         }
@@ -59,9 +63,6 @@ public class Semaforo {
 
     public void semaforoFechar() {
         try {
-            ficarAmarelo();
-            Thread.sleep(this.tempoAmarelo);
-
             ficarVermelho();
             Thread.sleep(tempoVermelho);
 
@@ -70,13 +71,17 @@ public class Semaforo {
         }
     }
 
-    public String getConteudoAtual() {
-        return this.estados.atual.getConteudo();
-    }
-
     public String mudarEstado() {
         estados.proximo();
         return estados.getAtual();
+    }
+
+    public boolean isAberto(){
+        return this.getEstadoAtual() == "VERMELHO" ? true : false;
+    }
+
+    public String getEstadoAtual() {
+        return this.estados.atual.getConteudo();
     }
 
     public void setTempoVerde(int tempo) {
