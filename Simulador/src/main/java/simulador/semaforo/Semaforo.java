@@ -8,7 +8,6 @@ public class Semaforo {
     private int tempoVerde;
     private int tempoAmarelo;
     private int tempoVermelho;
-    private boolean estaAberto;
 
     public Semaforo(int tmpVerde, int tmpAmarelo) {
         estados = new ListaCircular<>();
@@ -19,42 +18,42 @@ public class Semaforo {
 
         tempoVerde = tmpVerde;
         tempoAmarelo = tmpAmarelo;
-        tempoVermelho = tmpVerde + tmpAmarelo;
+        tempoVermelho = tmpAmarelo + tmpVerde;
 
     }
 
 
     public String ficarVermelho() {
-        while (!estados.getAtual().equals("VERMELHO")) {
-            mudarEstado();
+        while (!estados.getConteudoAtual().equals("VERMELHO")) {
+            proximoEstado();
         }
+        System.out.println(this.toString() + " : " + getConteudoAtual());
 
-        return estados.getAtual();
+        return estados.getConteudoAtual();
     }
 
     public String ficarVerde() {
-        while (!estados.getAtual().equals("VERDE")) {
-            mudarEstado();
+        while (!estados.getConteudoAtual().equals("VERDE")) {
+            proximoEstado();
         }
+        System.out.println(this.toString() + " : " + getConteudoAtual());
 
-        return estados.getAtual();
+        return estados.getConteudoAtual();
     }
 
     public String ficarAmarelo() {
-        while (!estados.getAtual().equals("AMARELO")) {
-            mudarEstado();
+        while (!estados.getConteudoAtual().equals("AMARELO")) {
+            proximoEstado();
         }
+        System.out.println(this.toString() + " : " + getConteudoAtual());
 
-        return estados.getAtual();
+        return estados.getConteudoAtual();
     }
 
     public void semaforoAbrir() {
         try {
             ficarVerde();
             Thread.sleep(this.tempoVerde);
-
-            ficarAmarelo();
-            Thread.sleep(this.tempoAmarelo);
 
         } catch (InterruptedException e) {
             System.out.println("Execução do sinal interrompida!");
@@ -63,37 +62,44 @@ public class Semaforo {
 
     public void semaforoFechar() {
         try {
+            ficarAmarelo();
+            Thread.sleep(this.tempoAmarelo);
+
             ficarVermelho();
-            Thread.sleep(tempoVermelho);
+            Thread.sleep(this.tempoVermelho);
 
         } catch (InterruptedException e) {
             System.out.println("Execução do sinal interrompida!");
         }
     }
 
-    public String mudarEstado() {
-        estados.proximo();
-        return estados.getAtual();
-    }
-
-    public boolean isAberto(){
-        return this.getEstadoAtual() == "VERMELHO" ? true : false;
-    }
-
-    public String getEstadoAtual() {
+    public String getConteudoAtual() {
         return this.estados.atual.getConteudo();
     }
 
+    public String proximoEstado() {
+        estados.proximo();
+        return estados.getConteudoAtual();
+    }
+
+    public String obterEstado(String nome) {
+        while (!estados.getConteudoAtual().equals(nome)) {
+            proximoEstado();
+        }
+
+        return estados.getConteudoAtual();
+    }
+
     public void setTempoVerde(int tempo) {
-        this.tempoVerde=tempo;
+        this.tempoVerde = tempo;
     }
 
     public void setTempoVermelho(int tempo) {
-        this.tempoVermelho=tempo;
+        this.tempoVermelho = tempo;
     }
 
     public void setTempoAmarelo(int tempo) {
-        this.tempoAmarelo=tempo;
+        this.tempoAmarelo = tempo;
     }
 
 }

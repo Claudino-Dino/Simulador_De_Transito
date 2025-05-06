@@ -32,7 +32,7 @@ public class ListaCircular<T> {
         return false;
     }
 
-    public T getAtual() {
+    public T getConteudoAtual() {
         return (atual != null) ? this.atual.getConteudo() : null;
     }
 

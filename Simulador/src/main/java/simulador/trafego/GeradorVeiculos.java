@@ -34,11 +34,9 @@ public class GeradorVeiculos {
         } while (destino == origem);
 
         //        CRIA UM NOVO VEÍCULO E ADICIONA NO MAPA;
-
         Veiculo veiculo = new Veiculo(id, origem, destino);
         NoDuplo<Veiculo> noVeiculo = new NoDuplo<>(veiculo);
         veiculosMapa.enfileirar(noVeiculo);
-
     }
 
     public ListaEncadeada<Intersecao> obterIntercesaoPeso(int valor) {

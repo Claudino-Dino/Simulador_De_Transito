@@ -1,7 +1,5 @@
 package simulador.semaforo;
 
-import simulador.cidade.Intersecao;
-import simulador.cidade.Rua;
 import simulador.estruturas.ListaCircular;
 import simulador.estruturas.No;
 
@@ -11,22 +9,15 @@ public class ControladorSemaforos {
     public ListaCircular<Enum> modosOreperacao;
     public Enum modoOperacaoAtual;
     public Semaforo s1, s2;
-    public Rua r1, r2;
     public boolean horarioPico;
 
-    public ControladorSemaforos(Enum modo, Intersecao i1, Intersecao i2, Intersecao i3, Intersecao i4, String direcao1, String direcao2, int comprimento1, int comprimento2, double velocidadeMedia1, double velocidadeMedia2, int capacidadeDeFluxo1, int capacidadeDeFluxo2) {
+    public ControladorSemaforos(Enum modo) {
         modosOreperacao.adicionar(new No<>(CICLO_FIXO));
         modosOreperacao.adicionar(new No<>(TEMPO_ESPERA));
         modosOreperacao.adicionar(new No<>(CONSUMO));
 
         this.modoOperacaoAtual = modo;
-
-        r1 = new Rua(i1, i2, direcao1, comprimento1, velocidadeMedia1, capacidadeDeFluxo1);
-        r2 = new Rua(i3, i4, direcao2, comprimento2, velocidadeMedia2, capacidadeDeFluxo2);
-        s1 = new Semaforo(2000, 800, 2500);
-        s2 = new Semaforo(2000, 800, 2500);
     }
-
 
     public void aplicarControle() throws InterruptedException {
         switch (modoOperacaoAtual) {
@@ -71,7 +62,7 @@ public class ControladorSemaforos {
     }
 
     public void aplicarConsumo() throws InterruptedException {
-        if (horarioPico){
+        if (horarioPico) {
             aplicarTempoEspera();
         } else {
             aplicarCicloFixo();
@@ -79,31 +70,26 @@ public class ControladorSemaforos {
     }
 
     public int calcularTempoEspera() {
-        try {
-            if (modoOperacaoAtual == CICLO_FIXO || modoOperacaoAtual == CONSUMO) {
-                return 0;
-            }
-
-            int tamanhoFila1 = r1.qtdeCarrosAresta.tamanho();
-            int tamanhoFila2 = r2.qtdeCarrosAresta.tamanho();
-            int qtdeCarros = tamanhoFila1 - tamanhoFila2;
-
-            if (tamanhoFila1 > tamanhoFila2) {
-                return (qtdeCarros * 300);
-
-            } else {
-                qtdeCarros *= -1;
-                return (qtdeCarros * 300);
-
-            }
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
+//        try {
+//            int tamanhoFila1 = r1.qtdeCarrosAresta.tamanho();
+//            int tamanhoFila2 = r2.qtdeCarrosAresta.tamanho();
+//            int qtdeCarros = tamanhoFila1 - tamanhoFila2;
+//
+//            if (qtdeCarros < 0) {
+//                return ((qtdeCarros * 300) * -1);
+//            }
+//
+//            return qtdeCarros * 300;
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException();
+//        }
+        return 0;
     }
 
     public void setModoAtual() {
         this.modosOreperacao.proximo();
-        this.modoOperacaoAtual = this.modosOreperacao.getAtual();
+        this.modoOperacaoAtual = this.modosOreperacao.getConteudoAtual();
     }
 
 
