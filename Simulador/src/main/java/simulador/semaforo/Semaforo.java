@@ -9,7 +9,7 @@ public class Semaforo {
     private int tempoAmarelo;
     private int tempoVermelho;
 
-    public Semaforo(int tmpVerde, int tmpAmarelo, int tmpVermelho) {
+    public Semaforo(int tmpVerde, int tmpAmarelo) {
         estados = new ListaCircular<>();
 
         estados.adicionar(new No("VERMELHO"));
@@ -18,33 +18,36 @@ public class Semaforo {
 
         tempoVerde = tmpVerde;
         tempoAmarelo = tmpAmarelo;
-        tempoVermelho = tmpVermelho;
+        tempoVermelho = tmpAmarelo + tmpVerde;
 
     }
 
 
     public String ficarVermelho() {
-        while (!estados.getAtual().equals("VERMELHO")) {
-            mudarEstado();
+        while (!estados.getConteudoAtual().equals("VERMELHO")) {
+            proximoEstado();
         }
+        System.out.println(this.toString() + " : " + getConteudoAtual());
 
-        return estados.getAtual();
+        return estados.getConteudoAtual();
     }
 
     public String ficarVerde() {
-        while (!estados.getAtual().equals("VERDE")) {
-            mudarEstado();
+        while (!estados.getConteudoAtual().equals("VERDE")) {
+            proximoEstado();
         }
+        System.out.println(this.toString() + " : " + getConteudoAtual());
 
-        return estados.getAtual();
+        return estados.getConteudoAtual();
     }
 
     public String ficarAmarelo() {
-        while (!estados.getAtual().equals("AMARELO")) {
-            mudarEstado();
+        while (!estados.getConteudoAtual().equals("AMARELO")) {
+            proximoEstado();
         }
+        System.out.println(this.toString() + " : " + getConteudoAtual());
 
-        return estados.getAtual();
+        return estados.getConteudoAtual();
     }
 
     public void semaforoAbrir() {
@@ -63,7 +66,7 @@ public class Semaforo {
             Thread.sleep(this.tempoAmarelo);
 
             ficarVermelho();
-            Thread.sleep(tempoVermelho);
+            Thread.sleep(this.tempoVermelho);
 
         } catch (InterruptedException e) {
             System.out.println("Execução do sinal interrompida!");
@@ -74,21 +77,29 @@ public class Semaforo {
         return this.estados.atual.getConteudo();
     }
 
-    public String mudarEstado() {
+    public String proximoEstado() {
         estados.proximo();
-        return estados.getAtual();
+        return estados.getConteudoAtual();
+    }
+
+    public String obterEstado(String nome) {
+        while (!estados.getConteudoAtual().equals(nome)) {
+            proximoEstado();
+        }
+
+        return estados.getConteudoAtual();
     }
 
     public void setTempoVerde(int tempo) {
-        this.tempoVerde=tempo;
+        this.tempoVerde = tempo;
     }
 
     public void setTempoVermelho(int tempo) {
-        this.tempoVermelho=tempo;
+        this.tempoVermelho = tempo;
     }
 
     public void setTempoAmarelo(int tempo) {
-        this.tempoAmarelo=tempo;
+        this.tempoAmarelo = tempo;
     }
 
 }

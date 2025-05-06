@@ -170,7 +170,6 @@ public class ListaEncadeada<T> {
 
             noAtual = noAtual.proximo;
             contador++;
-
         }
 
         throw new InvalidKeyException("Erro inesperado ao acessar o índice.");

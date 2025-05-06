@@ -25,7 +25,7 @@ public class Simulador implements Serializable {
                     atualizarSimulacao();
 
                     Grafo grafo = new Grafo();
-                    ControladorSemaforos controladorSemaforos = new ControladorSemaforos(CICLO_FIXO);
+//                    ControladorSemaforos controladorSemaforos = new ControladorSemaforos(CICLO_FIXO);
                     GeradorVeiculos geradorVeiculos = new GeradorVeiculos(grafo);
 
                     try {
