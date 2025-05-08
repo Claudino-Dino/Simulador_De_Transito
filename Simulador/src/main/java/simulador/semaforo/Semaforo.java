@@ -90,6 +90,10 @@ public class Semaforo {
         return estados.getConteudoAtual();
     }
 
+    public int getTempoAmarelo() {
+        return tempoAmarelo;
+    }
+
     public void setTempoVerde(int tempo) {
         this.tempoVerde = tempo;
     }
