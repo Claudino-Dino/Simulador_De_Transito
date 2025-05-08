@@ -1,11 +1,15 @@
 package simulador.cidade;
 
 import simulador.estruturas.ListaEncadeada;
+import simulador.estruturas.NoDuplo;
+import simulador.semaforo.ModoOperacao;
 import simulador.semaforo.Semaforo;
 
+import static simulador.semaforo.ModoOperacao.*;
+
 public class Intersecao {
-    public Semaforo s1 = new Semaforo(5000, 1000);
-    public Semaforo s2 = new Semaforo(5000, 1000);
+    public Rua rua1;
+    public Rua rua2;
     public ListaEncadeada<Semaforo> listaSemaforos = new ListaEncadeada<>();
     public int id;
     public int qtdeSemaforos;
@@ -24,19 +28,23 @@ public class Intersecao {
         return valor == 1 ? true : false;
     }
 
-    public void acionarSemaforos() throws InterruptedException {
-        s2.obterEstado("VERMELHO");
-        System.out.println("simulador.semaforo.Semaforo@4fca772d : " + s2.getConteudoAtual());
+    public void acionarSemaforos(ModoOperacao modo) throws InterruptedException {
+        Semaforo s1 = new Semaforo(5000, 1000);
+        Semaforo s2 = new Semaforo(5000, 1000);
 
-        while (true) {
-            s1.semaforoAbrir();
-            s1.semaforoFechar();
-            Thread.sleep(200);
-            s2.semaforoAbrir();
-            s2.semaforoFechar();
-            Thread.sleep(200);
+        listaSemaforos.adicionar(new NoDuplo<>(s1),0);
+        listaSemaforos.adicionar(new NoDuplo<>(s2),1);
+
+        switch (modo) {
+            case CICLO_FIXO:
+                modo.acionarCicloFixo(this.listaSemaforos);
+            case TEMPO_ESPERA:
+                modo.acionarTempoEspera(this.listaSemaforos, this.rua1, this.rua2);
+            case CONSUMO:
+                modo.acionarConsumo(this.listaSemaforos, this.rua1, this.rua2);
+            default:
+                throw new IllegalStateException("Unexpected value: " + modo);
         }
-
     }
 
 }
