@@ -2,14 +2,16 @@ package simulador.semaforo;
 
 import simulador.cidade.Rua;
 import simulador.estruturas.ListaEncadeada;
-import simulador.semaforo.ControladorSemaforos;
 
 import java.security.InvalidKeyException;
+import java.util.Random;
 
 public enum ModoOperacao {
     CICLO_FIXO,
     TEMPO_ESPERA,
     CONSUMO;
+
+    Random gerador = new Random();
 
     ControladorSemaforos cs = new ControladorSemaforos();
 
@@ -46,21 +48,21 @@ public enum ModoOperacao {
             throw new RuntimeException(e);
         }
 
-        s2.obterEstado("VERMELHO");
+        System.out.println(s2.obterEstado("VERMELHO"));
 
         while (true) {
             int tmpRua1 = calcularTempoEspera(rua1);
             int tmpRua2 = calcularTempoEspera(rua2);
 
             s1.setTempoVerde(tmpRua1);
-            s2.setTempoVermelho(tmpRua2 + s2.getTempoAmarelo());
+            s2.setTempoVermelho(tmpRua1 + s2.getTempoAmarelo());
 
             s1.semaforoAbrir();
 
             s1.setTempoVermelho(tmpRua2 + s1.getTempoAmarelo());
             s2.setTempoVerde(tmpRua2);
 
-            s1.semaforoFechar();
+            s1.obterEstado("VERMELHO");
 
             s2.semaforoAbrir();
             s2.semaforoFechar();
@@ -81,9 +83,11 @@ public enum ModoOperacao {
     }
 
     public int calcularTempoEspera(Rua rua) {
-        int qtdeCarrosRua = rua.qtdeCarrosAresta.tamanho();
+        int qtdeCarrosRua = rua.filaCarrosRua; //.tamanho();
 
-        return qtdeCarrosRua * 200;
+        int rand = gerador.nextInt(40);
+        System.out.println(rand + " carros na rua " + rua);
+        return rand * 400;
     }
 
 }

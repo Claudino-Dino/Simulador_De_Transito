@@ -1,5 +1,11 @@
 package simulador.cidade;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import simulador.estruturas.ListaEncadeada;
 import simulador.estruturas.NoDuplo;
 
@@ -21,6 +27,24 @@ public class Grafo {
         return rua;
     }
 
+    public Grafo () {
+        try {
+            String caminho = "C:/Users/Romerson Filho/Downloads/FreiSerafimTeresinaPiauíBrazil.json";
+
+            String stringJson = new String(Files.readAllBytes(Paths.get(caminho)));
+
+            JSONObject json = new JSONObject(stringJson);
+
+            for (Object key : json.keySet()) {
+                System.out.println(key);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     public ListaEncadeada<Intersecao> getIntersecoes() {
         return intersecoes;
@@ -31,14 +55,14 @@ public class Grafo {
     }
 
     public void conectarNos(Intersecao origem, Intersecao destino, String direcao, int comprimento, double velocidadeMedia, int capacidadeDeFluxo) {
-        NoDuplo<Rua> noRuaLigarNos = new NoDuplo<>(new Rua(
-                origem,
-                destino,
-                direcao,
-                comprimento,
-                velocidadeMedia,
-                capacidadeDeFluxo
-        ));
+//        NoDuplo<Rua> noRuaLigarNos = new NoDuplo<>(new Rua(
+//                origem,
+//                destino,
+//                direcao,
+//                comprimento,
+//                velocidadeMedia,
+//                capacidadeDeFluxo
+//        ));
 
     }
 }

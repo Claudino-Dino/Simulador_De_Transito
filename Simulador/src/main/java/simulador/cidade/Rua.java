@@ -12,53 +12,57 @@ public class Rua {
     public String direcao;
     public int capacidadeDeFluxo;
     public double tempoDeTravessia;
-    public FilaEncadeada<Veiculo> qtdeCarrosAresta;
+    public int filaCarrosRua;
 
     public Rua(
-            Intersecao intercesaoOrigem,
-            Intersecao intercesaoDestino,
-            String direcao,
-            int comprimento,
-            double velocidadeMedia,
-            int capacidadeDeFluxo
+//            Intersecao intercesaoOrigem,
+//            Intersecao intercesaoDestino,
+//            String direcao,
+//            int comprimento,
+//            double velocidadeMedia,
+//            int capacidadeDeFluxo
+
 
     ) {
-        this.intercesaoOrigem = intercesaoOrigem;
-        this.intercesaoDestino = intercesaoDestino;
-        this.direcao = direcao;
-        this.comprimento = comprimento;
-        this.velocidadeMedia = velocidadeMedia;
-        this.capacidadeDeFluxo = capacidadeDeFluxo;
-    }
+//        this.intercesaoOrigem = intercesaoOrigem;
+//        this.intercesaoDestino = intercesaoDestino;
+//        this.direcao = direcao;
+//        this.comprimento = comprimento;
+//        this.velocidadeMedia = velocidadeMedia;
+//        this.capacidadeDeFluxo = capacidadeDeFluxo;
+            this.filaCarrosRua = 10;
 
-    public boolean adicionarCarro(Veiculo carro) {
-        if (qtdeCarrosAresta.tamanho() < capacidadeDeFluxo) {
-            this.qtdeCarrosAresta.enfileirar(new No<Veiculo>(carro));
+        }
+
+        public boolean adicionarCarro (String carro){
+//            if (filaCarrosRua.tamanho() < capacidadeDeFluxo) {
+//                this.filaCarrosRua.enfileirar(new No<>(carro));
+//                return true;
+//            }
+//            return false;
             return true;
         }
-        return false;
-    }
 
-    public void removerCarro(){
+        public void removerCarro () {
 //        SE O CARRO CHEGAR NO VÉRTICE FINAL DO GRAFO, SIGNIFICA QUE ELE SAIU DO MAPA
 //        ENTÃO FAZER OUTRO CARRO APARECER "geradorCarros.gerar();"
-        qtdeCarrosAresta.desenfileirar();
-    }
+//            filaCarrosRua.desenfileirar();
+        }
 
-    public Intersecao getIntercesaoOrigem() {
-        return this.intercesaoOrigem;
-    }
+        public Intersecao getIntercesaoOrigem () {
+            return this.intercesaoOrigem;
+        }
 
-    public Intersecao getIntercesaoDestino() {
-        return this.intercesaoDestino;
-    }
+        public Intersecao getIntercesaoDestino () {
+            return this.intercesaoDestino;
+        }
 
-    public double getTempoDeTravessia() {
-        return this.tempoDeTravessia;
-    }
+        public double getTempoDeTravessia () {
+            return this.tempoDeTravessia;
+        }
 
-    public double calcularTempoDeTravessia() {
-        return this.comprimento / this.velocidadeMedia;
-    }
+        public double calcularTempoDeTravessia () {
+            return this.comprimento / this.velocidadeMedia;
+        }
 
-}
+    }

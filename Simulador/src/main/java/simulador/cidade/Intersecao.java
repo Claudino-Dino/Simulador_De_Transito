@@ -8,8 +8,8 @@ import simulador.semaforo.Semaforo;
 import static simulador.semaforo.ModoOperacao.*;
 
 public class Intersecao {
-    public Rua rua1;
-    public Rua rua2;
+    public Rua rua1 = new Rua();
+    public Rua rua2 = new Rua();
     public ListaEncadeada<Semaforo> listaSemaforos = new ListaEncadeada<>();
     public int id;
     public int qtdeSemaforos;

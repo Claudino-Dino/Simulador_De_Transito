@@ -1,8 +1,10 @@
 package simulador;
 
+import simulador.cidade.Grafo;
 import simulador.cidade.Intersecao;
 
 import static simulador.semaforo.ModoOperacao.CICLO_FIXO;
+import static simulador.semaforo.ModoOperacao.TEMPO_ESPERA;
 
 
 public class Main {
@@ -14,11 +16,13 @@ public class Main {
 
         Intersecao i1 = new Intersecao(1, 1, 2, true);
 
-        try {
-            i1.acionarSemaforos(CICLO_FIXO);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            i1.acionarSemaforos(TEMPO_ESPERA);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        Grafo grafo = new Grafo();
 
     }
 
