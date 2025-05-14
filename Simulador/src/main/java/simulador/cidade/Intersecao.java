@@ -8,29 +8,20 @@ import simulador.semaforo.Semaforo;
 import static simulador.semaforo.ModoOperacao.*;
 
 public class Intersecao {
-    public Rua rua1 = new Rua();
-    public Rua rua2 = new Rua();
     public ListaEncadeada<Semaforo> listaSemaforos = new ListaEncadeada<>();
-    public int id;
-    public int qtdeSemaforos;
-    public int valor;
-    public boolean temSemaforo;
-    public boolean origem;
+    public String id;
+    public Double longitude;
+    public Double latitude;
 
-    public Intersecao(int id, int valor, int qtdeSemaforos, boolean temSemaforo) {
+    public Intersecao(String id, Double longitude, Double latitude) {
         this.id = id;
-        this.temSemaforo = temSemaforo;
-        this.qtdeSemaforos = qtdeSemaforos;
-        this.valor = valor;
+        this.longitude=longitude;
+        this.latitude=latitude;
     }
 
-    public boolean ehOrigem() {
-        return valor == 1 ? true : false;
-    }
-
-    public void acionarSemaforos(ModoOperacao modo) throws InterruptedException {
-        Semaforo s1 = new Semaforo(5000, 1000);
-        Semaforo s2 = new Semaforo(5000, 1000);
+    public void acionarSemaforos(ModoOperacao modo, Rua rua1, Rua rua2) throws InterruptedException {
+        Semaforo s1 = new Semaforo();
+        Semaforo s2 = new Semaforo();
 
         listaSemaforos.adicionar(new NoDuplo<>(s1),0);
         listaSemaforos.adicionar(new NoDuplo<>(s2),1);
@@ -39,9 +30,9 @@ public class Intersecao {
             case CICLO_FIXO:
                 modo.acionarCicloFixo(this.listaSemaforos);
             case TEMPO_ESPERA:
-                modo.acionarTempoEspera(this.listaSemaforos, this.rua1, this.rua2);
+                modo.acionarTempoEspera(this.listaSemaforos, rua1, rua2);
             case CONSUMO:
-                modo.acionarConsumo(this.listaSemaforos, this.rua1, this.rua2);
+                modo.acionarConsumo(this.listaSemaforos, rua1, rua2);
             default:
                 throw new IllegalStateException("Unexpected value: " + modo);
         }

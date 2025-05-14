@@ -14,7 +14,7 @@ public class Main {
 
 //        FAZER INTERCESSEÇÃO COM DOIS SEMÁFOROS E COMUTAR
 
-        Intersecao i1 = new Intersecao(1, 1, 2, true);
+        Intersecao i1 = new Intersecao("a", 2.0, 2.1);
 
 //        try {
 //            i1.acionarSemaforos(TEMPO_ESPERA);

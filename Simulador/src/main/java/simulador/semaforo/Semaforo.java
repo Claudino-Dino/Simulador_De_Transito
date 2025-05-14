@@ -1,6 +1,7 @@
 package simulador.semaforo;
 
 import simulador.estruturas.ListaCircular;
+import simulador.estruturas.ListaEncadeada;
 import simulador.estruturas.No;
 
 public class Semaforo {
@@ -8,18 +9,22 @@ public class Semaforo {
     private int tempoVerde;
     private int tempoAmarelo;
     private int tempoVermelho;
+    public String id;
+    public Double latitude;
+    public Double longitude;
+    public ListaEncadeada<String> atributos;
 
-    public Semaforo(int tmpVerde, int tmpAmarelo) {
+
+    public Semaforo() {
         estados = new ListaCircular<>();
 
         estados.adicionar(new No("VERMELHO"));
         estados.adicionar(new No("VERDE"));
         estados.adicionar(new No("AMARELO"));
 
-        tempoVerde = tmpVerde;
-        tempoAmarelo = tmpAmarelo;
-        tempoVermelho = tmpAmarelo + tmpVerde;
-
+        tempoVerde = 5000;
+        tempoAmarelo = 1000;
+        tempoVermelho = 6000;
     }
 
 

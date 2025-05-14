@@ -1,8 +1,6 @@
 package simulador.cidade;
 
 import org.json.JSONObject;
-import org.json.JSONArray;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,6 +26,8 @@ public class Grafo {
     }
 
     public Grafo () {
+        ListaEncadeada<Object> listaKeyJson = null;
+
         try {
             String caminho = "C:/Users/Romerson Filho/Downloads/FreiSerafimTeresinaPiauíBrazil.json";
 
@@ -37,6 +37,13 @@ public class Grafo {
 
             for (Object key : json.keySet()) {
                 System.out.println(key);
+
+//                assert false;
+                listaKeyJson.enfileirar(new NoDuplo<>(key));
+
+//                for (int i=0; i<listaKeyJson.tamanhoLista(); i++){
+//                    System.out.println(listaKeyJson.desenfileirar());
+//                }
             }
 
         } catch (IOException e) {
