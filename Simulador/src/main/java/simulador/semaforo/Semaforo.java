@@ -10,8 +10,8 @@ public class Semaforo {
     private int tempoAmarelo;
     private int tempoVermelho;
     public String id;
-    public Double latitude;
-    public Double longitude;
+    public String latitude;
+    public String longitude;
     public ListaEncadeada<String> atributos;
 
 

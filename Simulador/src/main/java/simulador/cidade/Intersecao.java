@@ -9,22 +9,25 @@ import static simulador.semaforo.ModoOperacao.*;
 
 public class Intersecao {
     public ListaEncadeada<Semaforo> listaSemaforos = new ListaEncadeada<>();
-    public String id;
-    public Double longitude;
-    public Double latitude;
+    public ListaEncadeada<Rua> listaRuas = new ListaEncadeada<>();
 
-    public Intersecao(String id, Double longitude, Double latitude) {
+
+    public String id;
+    public String latitude;
+    public String longitude;
+
+    public Intersecao(String id, String latitude, String longitude) {
         this.id = id;
-        this.longitude=longitude;
-        this.latitude=latitude;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public void acionarSemaforos(ModoOperacao modo, Rua rua1, Rua rua2) throws InterruptedException {
         Semaforo s1 = new Semaforo();
         Semaforo s2 = new Semaforo();
 
-        listaSemaforos.adicionar(new NoDuplo<>(s1),0);
-        listaSemaforos.adicionar(new NoDuplo<>(s2),1);
+        listaSemaforos.adicionar(new NoDuplo<>(s1), 0);
+        listaSemaforos.adicionar(new NoDuplo<>(s2), 1);
 
         switch (modo) {
             case CICLO_FIXO:

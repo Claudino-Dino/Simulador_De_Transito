@@ -1,5 +1,7 @@
 package simulador.estruturas;
 
+import simulador.cidade.Intersecao;
+
 import java.security.InvalidKeyException;
 
 public class ListaEncadeada<T> {
@@ -170,6 +172,23 @@ public class ListaEncadeada<T> {
 
             noAtual = noAtual.proximo;
             contador++;
+        }
+
+        throw new InvalidKeyException("Erro inesperado ao acessar o índice.");
+    }
+
+    public T obter(Intersecao i) throws InvalidKeyException {
+        if (estaVazia()) {
+            throw new NullPointerException("Impossível obter um nó de uma lista vazia.");
+        }
+
+
+        NoDuplo<T> noAtual = this.head;
+        while (noAtual != null) {
+            if (noAtual.conteudo == i) {
+                return noAtual.conteudo;
+            }
+            noAtual = noAtual.proximo;
         }
 
         throw new InvalidKeyException("Erro inesperado ao acessar o índice.");

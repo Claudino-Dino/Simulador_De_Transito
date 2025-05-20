@@ -2,7 +2,7 @@ package simulador;
 
 import simulador.cidade.Grafo;
 import simulador.semaforo.ControladorSemaforos;
-import simulador.trafego.GeradorVeiculos;
+//import simulador.trafego.GeradorVeiculos;
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,7 +15,7 @@ public class Simulador implements Serializable {
     private int tempoSimulado = 0;
     private boolean pausado = false;
 
-    public void iniciar() {
+    public void iniciar() throws IOException {
         System.out.println("Simulação iniciada");
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -24,9 +24,12 @@ public class Simulador implements Serializable {
                     tempoSimulado++;
                     atualizarSimulacao();
 
-                    Grafo grafo = new Grafo();
-//                    ControladorSemaforos controladorSemaforos = new ControladorSemaforos(CICLO_FIXO);
-                    GeradorVeiculos geradorVeiculos = new GeradorVeiculos(grafo);
+                    try {
+                        Grafo grafo = new Grafo();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
 
                     try {
                         gravar("C:\\Users\\Romerson Filho\\Documents\\FACULDADE\\3° PERIODO\\ESTRUTURA DE DADOS\\instancias\\instancias.ser");
