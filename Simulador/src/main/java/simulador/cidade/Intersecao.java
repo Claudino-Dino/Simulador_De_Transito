@@ -5,40 +5,53 @@ import simulador.estruturas.NoDuplo;
 import simulador.semaforo.ModoOperacao;
 import simulador.semaforo.Semaforo;
 
-import static simulador.semaforo.ModoOperacao.*;
+import javax.management.openmbean.InvalidKeyException;
+
 
 public class Intersecao {
     public ListaEncadeada<Semaforo> listaSemaforos = new ListaEncadeada<>();
     public ListaEncadeada<Rua> listaRuas = new ListaEncadeada<>();
-
-
     public String id;
-    public String latitude;
-    public String longitude;
+    public Double latitude;
+    public Double longitude;
 
-    public Intersecao(String id, String latitude, String longitude) {
+    public Intersecao(String id, Double latitude, Double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public void acionarSemaforos(ModoOperacao modo, Rua rua1, Rua rua2) throws InterruptedException {
-        Semaforo s1 = new Semaforo();
-        Semaforo s2 = new Semaforo();
-
-        listaSemaforos.adicionar(new NoDuplo<>(s1), 0);
-        listaSemaforos.adicionar(new NoDuplo<>(s2), 1);
+    public void acionarSemaforos(ModoOperacao modo) throws InterruptedException {
+        if (listaSemaforos.estaVazia() || listaRuas.estaVazia()) {
+            throw new InvalidKeyException("LISTA DE SEMAFORO OU RUA ESTÃO NULL");
+        }
 
         switch (modo) {
             case CICLO_FIXO:
                 modo.acionarCicloFixo(this.listaSemaforos);
             case TEMPO_ESPERA:
-                modo.acionarTempoEspera(this.listaSemaforos, rua1, rua2);
+                modo.acionarTempoEspera(this.listaSemaforos, this.listaRuas);
             case CONSUMO:
-                modo.acionarConsumo(this.listaSemaforos, rua1, rua2);
+                modo.acionarConsumo(this.listaSemaforos, this.listaRuas);
             default:
                 throw new IllegalStateException("Unexpected value: " + modo);
         }
+    }
+
+    public ListaEncadeada<Semaforo> getListaSemaforos() {
+        return listaSemaforos;
+    }
+
+    public void adicionarSemaforo(Semaforo s) {
+        this.listaSemaforos.enfileirar(new NoDuplo<>(s));
+    }
+
+    public ListaEncadeada<Rua> getListaRuas() {
+        return listaRuas;
+    }
+
+    public void adicionarRua(Rua r) {
+        this.listaRuas.enfileirar(new NoDuplo<>(r));
     }
 
 }

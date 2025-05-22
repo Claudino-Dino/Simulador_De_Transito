@@ -1,7 +1,5 @@
 package simulador.estruturas;
 
-import simulador.cidade.Intersecao;
-
 import java.security.InvalidKeyException;
 
 public class ListaEncadeada<T> {
@@ -58,48 +56,48 @@ public class ListaEncadeada<T> {
         noAtual.proximo = novoNo;
     }
 
-    public T remover(int posicao) {
-        // Verifica se a posição é menor que zero, ou se o tamanho é maior que a lista
-                int tamanhoLista = tamanhoLista();
-        if (posicao < 0 || posicao >= tamanhoLista || estaVazia()) {
-            throw new IllegalArgumentException("Posição inválida: " + posicao);
-        }
-
-        // Verifica se a lista está vazia
-        if (estaVazia()) {
-            throw new NullPointerException("Lista vazia!");
-        }
-
-        NoDuplo<T> noRemovido = this.head;
-
-        if (posicao == 0) {
-            // Remove o nó do início da lista;
-            this.head = this.head.proximo;
-            noRemovido.proximo = null;
-            return noRemovido.conteudo;
-        }
-
-        // Remove o nó do fim da lista;
-        if (posicao == tamanhoLista() - 1) {
-            noRemovido = this.tail;
-            this.tail = noRemovido.anterior;
-            return noRemovido.conteudo;
-        }
-
-        NoDuplo<T> noAtual = this.head;
-
-        for (int i = 0; i < posicao; i++) {
-            noAtual = noAtual.proximo;
-        }
-
-        // remove o nó do meio da lista;
-        noRemovido = noAtual;
-        noAtual.proximo.anterior = noAtual.anterior;
-        noAtual.anterior.proximo = noAtual.proximo;
-        noRemovido.proximo = null;
-        noRemovido.anterior = null;
-        return noRemovido.conteudo;
-    }
+//    public T remover(int posicao) {
+//        // Verifica se a posição é menor que zero, ou se o tamanho é maior que a lista
+//                int tamanhoLista = tamanhoLista();
+//        if (posicao < 0 || posicao >= tamanhoLista || estaVazia()) {
+//            throw new IllegalArgumentException("Posição inválida: " + posicao);
+//        }
+//
+//        // Verifica se a lista está vazia
+//        if (estaVazia()) {
+//            throw new NullPointerException("Lista vazia!");
+//        }
+//
+//        NoDuplo<T> noRemovido = this.head;
+//
+//        if (posicao == 0) {
+//            // Remove o nó do início da lista;
+//            this.head = this.head.proximo;
+//            noRemovido.proximo = null;
+//            return noRemovido.conteudo;
+//        }
+//
+//        // Remove o nó do fim da lista;
+//        if (posicao == tamanhoLista() - 1) {
+//            noRemovido = this.tail;
+//            this.tail = noRemovido.anterior;
+//            return noRemovido.conteudo;
+//        }
+//
+//        NoDuplo<T> noAtual = this.head;
+//
+//        for (int i = 0; i < posicao; i++) {
+//            noAtual = noAtual.proximo;
+//        }
+//
+//        // remove o nó do meio da lista;
+//        noRemovido = noAtual;
+//        noAtual.proximo.anterior = noAtual.anterior;
+//        noAtual.anterior.proximo = noAtual.proximo;
+//        noRemovido.proximo = null;
+//        noRemovido.anterior = null;
+//        return noRemovido.conteudo;
+//    }
 
     public NoDuplo<T> enfileirar(NoDuplo<T> novoNo) {
         if (estaVazia()) {
@@ -122,7 +120,7 @@ public class ListaEncadeada<T> {
             if (this.head.proximo == null) {
                 this.head = null;
                 this.tail = null;
-                return head;
+                return null;
             }
 
             NoDuplo<T> noDesenfileirar = this.head;
@@ -172,23 +170,6 @@ public class ListaEncadeada<T> {
 
             noAtual = noAtual.proximo;
             contador++;
-        }
-
-        throw new InvalidKeyException("Erro inesperado ao acessar o índice.");
-    }
-
-    public T obter(Intersecao i) throws InvalidKeyException {
-        if (estaVazia()) {
-            throw new NullPointerException("Impossível obter um nó de uma lista vazia.");
-        }
-
-
-        NoDuplo<T> noAtual = this.head;
-        while (noAtual != null) {
-            if (noAtual.conteudo == i) {
-                return noAtual.conteudo;
-            }
-            noAtual = noAtual.proximo;
         }
 
         throw new InvalidKeyException("Erro inesperado ao acessar o índice.");

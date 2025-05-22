@@ -3,19 +3,21 @@ package simulador.cidade;
 import simulador.estruturas.FilaEncadeada;
 import simulador.estruturas.ListaEncadeada;
 import simulador.estruturas.PilhaEncadeada;
-
 import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class Dijkstra {
 
-    public static FilaEncadeada<Intersecao> encontrarMenorCaminho(Grafo grafo, Intersecao origem, Intersecao destino) throws InvalidKeyException {
+    public static FilaEncadeada<Intersecao> encontrarMenorCaminho(Grafo grafo, String iDorigem, String iDdestino) throws InvalidKeyException {
+        Intersecao origem = grafo.obterIntersecaoPorId(iDorigem);
+        Intersecao destino = grafo.obterIntersecaoPorId(iDdestino);
+
         HashMap<Intersecao, Integer> distancias = new HashMap<>();
         HashMap<Intersecao, Intersecao> anteriores = new HashMap<>();
         HashSet<Intersecao> visitados = new HashSet<>();
-
         ListaEncadeada<Intersecao> todosVertices = grafo.getIntersecoes();
+
         for (int i = 0; i < todosVertices.tamanhoLista(); i++) {
             Intersecao v = todosVertices.obter(i);
             distancias.put(v, Integer.MAX_VALUE);

@@ -1,5 +1,6 @@
 package simulador.semaforo;
 
+import simulador.cidade.Direcao;
 import simulador.estruturas.ListaCircular;
 import simulador.estruturas.ListaEncadeada;
 import simulador.estruturas.No;
@@ -9,11 +10,8 @@ public class Semaforo {
     private int tempoVerde;
     private int tempoAmarelo;
     private int tempoVermelho;
-    public String id;
-    public String latitude;
-    public String longitude;
-    public ListaEncadeada<String> atributos;
-
+    public Direcao direcao;
+    public boolean fechado;
 
     public Semaforo() {
         estados = new ListaCircular<>();
@@ -26,7 +24,6 @@ public class Semaforo {
         tempoAmarelo = 1000;
         tempoVermelho = 6000;
     }
-
 
     public String ficarVermelho() {
         while (!estados.getConteudoAtual().equals("VERMELHO")) {
@@ -109,6 +106,18 @@ public class Semaforo {
 
     public void setTempoAmarelo(int tempo) {
         this.tempoAmarelo = tempo;
+    }
+
+    public Direcao getDirecao() {
+        return direcao;
+    }
+
+    public void setDirecao(Direcao direcao) {
+        this.direcao = direcao;
+    }
+
+    public boolean isFechado() {
+        return fechado;
     }
 
 }

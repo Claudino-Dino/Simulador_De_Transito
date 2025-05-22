@@ -1,7 +1,8 @@
 package simulador.cidade;
 
-import simulador.estruturas.FilaEncadeada;
-import simulador.estruturas.No;
+import simulador.estruturas.ListaEncadeada;
+import simulador.estruturas.NoDuplo;
+import simulador.semaforo.Semaforo;
 import simulador.trafego.Veiculo;
 
 public class Rua {
@@ -9,38 +10,50 @@ public class Rua {
     public Intersecao intercesaoDestino;
     public int comprimento;
     public double tempoDeTravessia;
-    public boolean direcao;
+    public boolean via;
     public double velocidadeMedia;
     public int capacidadeDeFluxo;
-    public int filaCarrosRua;
+    public Direcao direcao;
+    public ListaEncadeada<Veiculo> filaCarrosRua = new ListaEncadeada<>();
+    private Semaforo semaforo;
 
     public Rua(
             Intersecao intercesaoOrigem, Intersecao intercesaoDestino,
             int comprimento, double tempoDeTravessia,
-            boolean direcao, double velocidadeMedia
+            boolean via, double velocidadeMedia
     ) {
         this.intercesaoOrigem = intercesaoOrigem;
         this.intercesaoDestino = intercesaoDestino;
         this.comprimento = comprimento;
         this.tempoDeTravessia = tempoDeTravessia;
-        this.direcao = direcao;
+        this.via = via;
         this.velocidadeMedia = velocidadeMedia;
-        this.capacidadeDeFluxo = (int)(comprimento/4); // 4 é o tamanho fixo do veículo
+        this.capacidadeDeFluxo = comprimento / 4; // 4 é o tamanho fixo do veículo (em metros).
+//        this.filaCarrosRua = 20;
     }
 
-    public boolean adicionarCarro(String carro) {
-//            if (filaCarrosRua.tamanho() < capacidadeDeFluxo) {
-//                this.filaCarrosRua.enfileirar(new No<>(carro));
-//                return true;
-//            }
-//            return false;
-        return true;
+    public boolean adicionarCarro(Veiculo carro) {
+        if (filaCarrosRua.tamanhoLista() < capacidadeDeFluxo) {
+            this.filaCarrosRua.enfileirar(new NoDuplo<>(carro));
+            return true;
+        }
+        return false;
     }
 
-    public void removerCarro() {
-//        SE O CARRO CHEGAR NO VÉRTICE FINAL DO GRAFO, SIGNIFICA QUE ELE SAIU DO MAPA
-//        ENTÃO FAZER OUTRO CARRO APARECER "geradorCarros.gerar();"
-//            filaCarrosRua.desenfileirar();
+    public Veiculo removerCarro() {
+        NoDuplo<Veiculo> noVeiculo = this.filaCarrosRua.desenfileirar();
+        return noVeiculo.conteudo;
+    }
+
+    public void calculoDirecao() {
+        double deltaLat = intercesaoOrigem.latitude - intercesaoDestino.latitude;
+        double deltaLong = intercesaoOrigem.longitude - intercesaoDestino.longitude;
+
+        if (deltaLat > deltaLong) {
+            this.setDirecao(Direcao.VERTICAL);
+        } else {
+            this.setDirecao(Direcao.HORIZONTAL);
+        }
     }
 
     public Intersecao getIntercesaoOrigem() {
@@ -59,4 +72,11 @@ public class Rua {
         return this.comprimento / this.velocidadeMedia;
     }
 
+    public void receberSemaforo(Semaforo semaforo) {
+        this.semaforo = semaforo;
+    }
+
+    public void setDirecao(Direcao direcao) {
+        this.direcao = direcao;
+    }
 }

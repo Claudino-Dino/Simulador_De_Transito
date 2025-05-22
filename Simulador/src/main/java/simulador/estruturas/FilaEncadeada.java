@@ -1,5 +1,7 @@
 package simulador.estruturas;
 
+import simulador.cidade.Intersecao;
+
 public class FilaEncadeada<T> {
     public No<T> head, tail;
 
@@ -42,6 +44,18 @@ public class FilaEncadeada<T> {
         }
     }
 
+    public T obter(int p) {
+        if (!estaVazia() && p >= 0 && p < tamanho()) {
+            No<T> noAtual = this.head;
+            for (int i = 0; i < p; i++) {
+                noAtual = noAtual.proximo;
+            }
+            return noAtual.conteudo;
+        }
+
+        throw new RuntimeException();
+    }
+
     public int tamanho() {
         int tamanho = 0;
 
@@ -66,5 +80,11 @@ public class FilaEncadeada<T> {
         return false;
     }
 
+    public No<T> getHead() {
+        return head;
+    }
 
+    public No<T> getTail() {
+        return tail;
+    }
 }
