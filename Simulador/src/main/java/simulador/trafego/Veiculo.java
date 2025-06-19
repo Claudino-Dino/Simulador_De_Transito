@@ -1,80 +1,81 @@
 package simulador.trafego;
 
-import simulador.cidade.Dijkstra;
 import simulador.cidade.Grafo;
 import simulador.cidade.Rua;
 import simulador.estruturas.FilaEncadeada;
 import simulador.cidade.Intersecao;
-
 import java.security.InvalidKeyException;
 
 public class Veiculo {
-    private String id;
-    private Intersecao origem;
+    private int id;
     private Intersecao atual;
-    private Intersecao destino;
-    private FilaEncadeada<Intersecao> caminho;
-    private int consumo;
-    private Grafo grafo;
+    private Double consumo = 0.0;
+    private Double tempoViagem = 0.0;
+    private int autonomia = 40;
+    private final FilaEncadeada<Intersecao> caminho;
+    private int passoAtual = 0;
+    public Grafo mapaMatriz = new Grafo();
 
-    public Veiculo(String id, Grafo grafo) throws InvalidKeyException {
+
+    public Veiculo(int id, FilaEncadeada<Intersecao> caminhoPredefinido) throws InvalidKeyException {
         this.id = id;
-        this.consumo = 0;
-        this.grafo = grafo;
-        this.caminho = new FilaEncadeada<>();
-        calcularRota(grafo);
-        this.origem = caminho.getHead().conteudo;
-        this.destino = caminho.getTail().conteudo;
+        this.caminho = caminhoPredefinido;
+        this.atual = caminho.obter(0);
     }
 
-    public void mover() throws InvalidKeyException, InterruptedException {
-        int i = 0;
-        while (this.atual != this.destino) {
-            Intersecao anterior = this.atual;
-            this.atual = caminho.obter(i);
-            Rua ruaAtual = null;
-            ruaAtual = this.grafo.obterArestaDeOrigemEDestino(anterior, this.atual);
-            System.out.println(ruaAtual);
+    public void mover() throws InvalidKeyException {
+        if (!atingiuDestino()) {
+            Intersecao proxima = caminho.obter(passoAtual + 1);
+            Rua rua = mapaMatriz.obterArestaPorOrigemDestino(atual, proxima);
 
+            if (rua == null) {
+                throw new InvalidKeyException("Não existe rua de " + atual.getId() +
+                        " para " + proxima.getId());
+            }
 
-            ruaAtual.adicionarCarro(this);
+            passoAtual++;
+            atualizarConsumo(atual, proxima);
+            atualizarTempoViagem(atual, proxima);
+            atual = proxima;
 
+            System.out.printf("Veículo %d moveu de %s para %s%n",
+                    id, atual.getId(), proxima.getId());
+        }
+    }
 
-
-            System.out.println("Veiculo movendo para: " + this.atual);
-            consumo++;
-            Thread.sleep(3000);
-            i++;
+    public void atualizarConsumo(Intersecao iAnterior, Intersecao iAtual) throws InvalidKeyException {
+        Rua rua = mapaMatriz.obterArestaPorOrigemDestino(iAnterior, iAtual);
+        if (rua == null) {
+            System.err.println("Rua não encontrada entre " + iAnterior.getId() + " e " + iAtual.getId());
+            return;
         }
 
+        rua.calcularConsumoRua(autonomia);
+        this.consumo += rua.getConsumo();
     }
 
-    public void calcularRota(Grafo grafo) throws InvalidKeyException {
-        this.caminho.enfileirar(Dijkstra.encontrarMenorCaminho(grafo, grafo.getIntersecoes().head.conteudo.id, grafo.getIntersecoes().tail.conteudo.id).desenfileirar());
-    }
-
-    public Intersecao getAtual() {
-        return atual;
+    public void atualizarTempoViagem(Intersecao iAnterior, Intersecao iAtual) throws InvalidKeyException {
+        Rua rua = mapaMatriz.obterArestaPorOrigemDestino(iAnterior, iAtual);
+        this.tempoViagem += rua.getTempoDeTravessia();
     }
 
     public boolean atingiuDestino() {
-        return this.origem.equals(this.destino);
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public Intersecao getOrigem() {
-        return this.origem;
-    }
-
-    public Intersecao getDestino() {
-        return this.destino;
+        return passoAtual >= caminho.tamanho() - 1;
     }
 
     public FilaEncadeada<Intersecao> getCaminho() {
         return this.caminho;
     }
 
+    public int getAutonomia() {
+        return autonomia;
+    }
+
+    public Double getConsumo() {
+        return consumo;
+    }
+
+    public Double getTempoViagem() {
+        return tempoViagem;
+    }
 }

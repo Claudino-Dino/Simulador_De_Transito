@@ -54,4 +54,19 @@ public class Intersecao {
         this.listaRuas.enfileirar(new NoDuplo<>(r));
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setSemaforo(boolean b) {
+
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
 }

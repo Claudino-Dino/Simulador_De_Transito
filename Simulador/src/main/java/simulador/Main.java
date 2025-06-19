@@ -1,62 +1,32 @@
 package simulador;
 
-import simulador.cidade.Grafo;
 import simulador.cidade.Intersecao;
-import simulador.cidade.Rua;
-import simulador.estruturas.No;
-import simulador.estruturas.NoDuplo;
-import simulador.semaforo.Semaforo;
+import simulador.cidade.Grafo;
+import simulador.estruturas.FilaEncadeada;
+import simulador.trafego.Roteador;
 import simulador.trafego.Veiculo;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
-import static simulador.semaforo.ModoOperacao.CICLO_FIXO;
-import static simulador.semaforo.ModoOperacao.TEMPO_ESPERA;
-
-
 public class Main {
-    public static void main(String[] args) throws IOException, NullPointerException, InvalidKeyException, InterruptedException {
-//        Simulador simulador = new Simulador();
-//        simulador.iniciar();
+    public static void main(String[] args) throws InvalidKeyException, IOException, InterruptedException {
+        Grafo mapaMatriz = new Grafo();
 
-//        FAZER INTERCESSEÇÃO COM DOIS SEMÁFOROS E COMUTAR
+        mapaMatriz.conectarRuas();
 
-//        Intersecao i1 = new Intersecao( );
+        Roteador roteador = new Roteador();
 
-//        try {
-//            i1.acionarSemaforos(TEMPO_ESPERA);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
+        FilaEncadeada<Intersecao> rota = roteador.gerarRotaValida(mapaMatriz);
 
-        Grafo grafo = new Grafo();
+        System.out.println(rota.tamanho());
 
-        Veiculo veiculo = new Veiculo("A", grafo);
-        veiculo.mover();
+        Veiculo carro = new Veiculo(0, rota);
+        if (!carro.atingiuDestino()) {
+            carro.mover();
+        }
 
-//        Rua rua = grafo.obterArestaDeOrigemEDestino(Rua@1075, Rua@1077);
-
-//        veiculo.printCaminho();
-//        grafo.getIntersecoes().head.conteudo.acionarSemaforos(TEMPO_ESPERA);
-//        for (int i=0; i<grafo.getIntersecoes().tamanhoLista(); i++){
-//            NoDuplo<Intersecao> inter = grafo.getIntersecoes().desenfileirar();
-//            System.out.println(inter.conteudo);
-//        }
-//
-//        for (int i=0; i<grafo.getRuas().tamanhoLista(); i++){
-//            NoDuplo<Rua> rua = grafo.getRuas().desenfileirar();
-//            System.out.println(rua.conteudo);
-//        }
-
-//        try {
-//            for (int i = 0; i < 70; i++) {
-//                NoDuplo<Intersecao> inter = grafo.getIntersecoes().desenfileirar();
-//                System.out.println(inter.conteudo.getListaRuas().tamanhoLista());
-//            }
-//        } catch (NullPointerException e) {
-//
-//        }
+        System.out.println("Consumo do carro " + carro + ": " + carro.getConsumo());
+        System.out.println("Tempo de viagem do carro " + carro + ": " + carro.getTempoViagem());
     }
-
 }

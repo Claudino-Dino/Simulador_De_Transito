@@ -1,6 +1,5 @@
 package simulador.semaforo;
 
-import simulador.cidade.Grafo;
 import simulador.cidade.Intersecao;
 import simulador.cidade.Rua;
 import simulador.estruturas.ListaCircular;

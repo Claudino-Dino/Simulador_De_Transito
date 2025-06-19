@@ -1,116 +1,96 @@
 package simulador.cidade;
 
-import org.json.JSONObject;
-import org.json.JSONArray;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.InvalidKeyException;
-
 import simulador.estruturas.ListaEncadeada;
 import simulador.estruturas.NoDuplo;
 
+import java.security.InvalidKeyException;
+
 public class Grafo {
-    ListaEncadeada<Intersecao> intersecoes = new ListaEncadeada<>();
-    ListaEncadeada<Rua> ruas = new ListaEncadeada<>();
+    public ListaEncadeada<Intersecao> intersecoes = new ListaEncadeada<>();
+    public ListaEncadeada<Rua> ruas = new ListaEncadeada<>();
 
-    public Grafo() throws IOException, InvalidKeyException {
-        carregarVertices();
-        carregarArestas();
-        adicionarRuasVertices();
+    public void carregarMapa(int qtdeIntersecoes) {
     }
 
-    private void carregarVertices() throws IOException, InvalidKeyException {
-        String caminho = "C:/Users/Romerson Filho/Downloads/FreiSerafimTeresinaPiauíBrazil.json";
-        String stringJson = new String(Files.readAllBytes(Paths.get(caminho)));
-        JSONObject json = new JSONObject(stringJson);
-
-        JSONArray trafficLightsJson = json.optJSONArray("traffic_lights");
-        ListaEncadeada<String> idsSemaforos = new ListaEncadeada<>();
-        if (trafficLightsJson != null) {
-            for (int i = 0; i < trafficLightsJson.length(); i++) {
-                JSONObject obj = trafficLightsJson.getJSONObject(i);
-                idsSemaforos.enfileirar(new NoDuplo<>(obj.getString("id")));
-            }
-        }
-
-        JSONArray nodes = json.getJSONArray("nodes");
-        for (int i = 0; i < nodes.length(); i++) {
-            JSONObject node = nodes.getJSONObject(i);
-            String id = node.getString("id");
-
-            boolean ignorar = false;
-            for (NoDuplo<String> no = idsSemaforos.head; no != null; no = no.proximo) {
-                if (no.conteudo.equals(id)) {
-                    ignorar = true;
-                    break;
-                }
-            }
-            if (ignorar) continue;
-
-            double latitude = node.getDouble("latitude");
-            double longitude = node.getDouble("longitude");
-            Intersecao intersecao = new Intersecao(id, latitude, longitude);
-            this.intersecoes.enfileirar(new NoDuplo<>(intersecao));
-        }
-    }
-
-    private void carregarArestas() throws IOException {
-        String caminho = "C:/Users/Romerson Filho/Downloads/FreiSerafimTeresinaPiauíBrazil.json";
-        String stringJson = new String(Files.readAllBytes(Paths.get(caminho)));
-        JSONObject json = new JSONObject(stringJson);
-
-        JSONArray edges = json.getJSONArray("edges");
-        for (int i = 0; i < edges.length(); i++) {
-            JSONObject edge = edges.getJSONObject(i);
-            String idOrigem = edge.getString("source");
-            String idDestino = edge.getString("target");
-
-            Intersecao origem = obterIntersecaoPorId(idOrigem);
-            Intersecao destino = obterIntersecaoPorId(idDestino);
-
-            if (origem != null && destino != null) {
-                int comprimento = (int) edge.getDouble("length");
-                double velocidade = edge.getDouble("maxspeed");
-                double tempoTravessia = comprimento / velocidade;
-                boolean via = edge.getBoolean("oneway");
-
-                Rua rua = new Rua(origem, destino, comprimento, tempoTravessia, via, velocidade);
-                ruas.enfileirar(new NoDuplo<>(rua));
-            }
-        }
-    }
-
-
-    public void adicionarRuasVertices() throws NullPointerException {
+    public void carregarIntersecoes() {
         try {
-            for (int i = 0; i < this.intersecoes.tamanhoLista(); i++) {
-                Intersecao intersecao = this.intersecoes.obter(i);
-                ListaEncadeada<Rua> ruasTemp = this.obterRuaPorIntersecao(intersecao);
+            Intersecao freiSerafimRua1 = new Intersecao("Frei Serafim x Rua 1", -5.0920, -42.8030);
+            Intersecao freiSerafimRua2 = new Intersecao("Frei Serafim x Rua 2", -5.0920, -42.8020);
+            Intersecao miguelRosaRua1 = new Intersecao("Miguel Rosa x Rua 1", -5.0930, -42.8030);
+            Intersecao miguelRosaRua2 = new Intersecao("Miguel Rosa x Rua 2", -5.0930, -42.8020);
 
-                int adicionadas = 0;
+            this.intersecoes.enfileirar(new NoDuplo<>(freiSerafimRua1));
+            this.intersecoes.enfileirar(new NoDuplo<>(freiSerafimRua2));
+            this.intersecoes.enfileirar(new NoDuplo<>(miguelRosaRua1));
+            this.intersecoes.enfileirar(new NoDuplo<>(miguelRosaRua2));
 
-                for (int j = 0; j < ruasTemp.tamanhoLista(); j++) {
-                        intersecao.listaRuas.enfileirar(ruasTemp.desenfileirar());
-                        adicionadas++;
-                }
+            if (intersecoes.tamanhoLista() != 4) {
+                throw new RuntimeException("Failed to load all intersections");
             }
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erro ao enfileirar interseções: " + e.getMessage());
+            throw e;
         }
+
     }
 
-    private ListaEncadeada<Rua> obterRuaPorIntersecao(Intersecao i) {
-        ListaEncadeada<Rua> ruasTemp = new ListaEncadeada<>();
-        for (NoDuplo<Rua> no = this.ruas.head; no != null; no = no.proximo) {
-            if (no.conteudo.intercesaoOrigem.equals(i)) {
-                ruasTemp.enfileirar(new NoDuplo<>(no.conteudo));
-            } else if (no.conteudo.intercesaoDestino.equals(i)) {
-                ruasTemp.enfileirar(new NoDuplo<>(no.conteudo));
+    public void conectarRuas() throws InvalidKeyException {
+        carregarIntersecoes();
+
+        try {
+            Intersecao inter1 = intersecoes.obter(0);
+            Intersecao inter2 = intersecoes.obter(1);
+            Intersecao inter3 = intersecoes.obter(2);
+            Intersecao inter4 = intersecoes.obter(3);
+
+            System.out.println("Inter1: " + inter1.getId());
+            System.out.println("Inter2: " + inter2.getId());
+            System.out.println("Inter3: " + inter3.getId());
+            System.out.println("Inter4: " + inter4.getId());
+
+            // Sentido original
+            Rua ruaAvFreiSerafim = new Rua(inter1, inter2, 100, 60);
+            Rua avMiguelRosa = new Rua(inter3, inter4, 100, 60);
+            Rua ruaAlvaroMendes = new Rua(inter1, inter3, 110, 60);
+            Rua ruaAoreolinoAbreu = new Rua(inter2, inter4, 110, 60);
+
+            // Sentido inverso
+            Rua ruaAvFreiSerafimInv = new Rua(inter2, inter1, 100, 60);
+            Rua avMiguelRosaInv = new Rua(inter4, inter3, 100, 60);
+            Rua ruaAlvaroMendesInv = new Rua(inter3, inter1, 110, 60);
+            Rua ruaAoreolinoAbreuInv = new Rua(inter4, inter2, 110, 60);
+
+            ruas.enfileirar(new NoDuplo<>(ruaAvFreiSerafim));
+            ruas.enfileirar(new NoDuplo<>(ruaAvFreiSerafimInv));
+
+            ruas.enfileirar(new NoDuplo<>(avMiguelRosa));
+            ruas.enfileirar(new NoDuplo<>(avMiguelRosaInv));
+
+            ruas.enfileirar(new NoDuplo<>(ruaAlvaroMendes));
+            ruas.enfileirar(new NoDuplo<>(ruaAlvaroMendesInv));
+
+            ruas.enfileirar(new NoDuplo<>(ruaAoreolinoAbreu));
+            ruas.enfileirar(new NoDuplo<>(ruaAoreolinoAbreuInv));
+
+        } catch (Exception e) {
+            System.err.println("Erro ao conectar ruas: " + e.getMessage());
+        }
+
+    }
+
+    public Rua obterArestaPorOrigemDestino(Intersecao origem, Intersecao destino) {
+        if (origem == null || destino == null) {
+            return null;
+        }
+
+        for (NoDuplo<Rua> no = ruas.head; no != null; no = no.proximo) {
+            Rua rua = no.conteudo;
+            if (rua.getIntercesaoOrigem().equals(origem) &&
+                    rua.getIntercesaoDestino().equals(destino)) {
+                return rua;
             }
         }
-        return ruasTemp;
+        return null;
     }
 
     public Intersecao obterIntersecaoPorId(String id) {
@@ -121,7 +101,6 @@ public class Grafo {
         }
         return null;
     }
-
 
     public ListaEncadeada<Rua> obterArestasDe(Intersecao i) {
         ListaEncadeada<Rua> rua = new ListaEncadeada<>();
@@ -137,22 +116,11 @@ public class Grafo {
         return rua;
     }
 
-    public Rua obterArestaDeOrigemEDestino(Intersecao origem, Intersecao destino) throws InvalidKeyException {
-        for (int i = 0; i < this.ruas.tamanhoLista(); i++) {
-            Rua ruaResposta = ruas.obter(i);
-            if ((origem.equals(ruaResposta.intercesaoOrigem)) && (destino.equals(ruaResposta.intercesaoDestino))) {
-                return ruaResposta;
-            }
-        }
-        return null;
-    }
-
     public ListaEncadeada<Intersecao> getIntersecoes() {
-        return this.intersecoes;
+        return intersecoes;
     }
 
     public ListaEncadeada<Rua> getRuas() {
         return ruas;
     }
-
 }

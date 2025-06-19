@@ -8,52 +8,63 @@ import simulador.trafego.Veiculo;
 public class Rua {
     public Intersecao intercesaoOrigem;
     public Intersecao intercesaoDestino;
-    public int comprimento;
-    public double tempoDeTravessia;
-    public boolean via;
-    public double velocidadeMedia;
+    public int comprimento; // Comprimento em Km
+    public double tempoDeTravessia; // Tempo em segundos
+    public double velocidadeMedia; // Velocidade em Km/h
     public int capacidadeDeFluxo;
     public Direcao direcao;
     public ListaEncadeada<Veiculo> filaCarrosRua = new ListaEncadeada<>();
     private Semaforo semaforo;
+    private Double consumo;
 
     public Rua(
             Intersecao intercesaoOrigem, Intersecao intercesaoDestino,
-            int comprimento, double tempoDeTravessia,
-            boolean via, double velocidadeMedia
+            int comprimento, double velocidadeMedia
     ) {
         this.intercesaoOrigem = intercesaoOrigem;
         this.intercesaoDestino = intercesaoDestino;
         this.comprimento = comprimento;
-        this.tempoDeTravessia = tempoDeTravessia;
-        this.via = via;
         this.velocidadeMedia = velocidadeMedia;
-        this.capacidadeDeFluxo = comprimento / 4; // 4 é o tamanho fixo do veículo (em metros).
-//        this.filaCarrosRua = 20;
+
+        // tempo em horas
+        double tempoHoras = comprimento / velocidadeMedia;
+
+        // convertendo para segundos
+        this.tempoDeTravessia = tempoHoras * 3600;
+
+        this.capacidadeDeFluxo = (comprimento * 1000) / 4; // 4m por veículo
+
+        // Calcula pela latitude e longitude se a direção da rua é Horizontal ou Vertical;
+        calcularDirecaoRua();
     }
 
     public boolean adicionarCarro(Veiculo carro) {
         if (filaCarrosRua.tamanhoLista() < capacidadeDeFluxo) {
             this.filaCarrosRua.enfileirar(new NoDuplo<>(carro));
+            this.consumo = (double) this.comprimento / (double) carro.getAutonomia();
             return true;
         }
         return false;
     }
 
-    public Veiculo removerCarro() {
-        NoDuplo<Veiculo> noVeiculo = this.filaCarrosRua.desenfileirar();
-        return noVeiculo.conteudo;
-    }
 
-    public void calculoDirecao() {
-        double deltaLat = intercesaoOrigem.latitude - intercesaoDestino.latitude;
-        double deltaLong = intercesaoOrigem.longitude - intercesaoDestino.longitude;
+    public void calcularDirecaoRua() {
+        double deltaLat = Math.abs(intercesaoOrigem.getLatitude() - intercesaoDestino.getLatitude());
+        double deltaLong = Math.abs(intercesaoOrigem.getLongitude() - intercesaoDestino.getLongitude());
 
         if (deltaLat > deltaLong) {
             this.setDirecao(Direcao.VERTICAL);
         } else {
             this.setDirecao(Direcao.HORIZONTAL);
         }
+    }
+
+    public void calcularConsumoRua(double qtdeConsumoCarro){
+        this.consumo = this.comprimento/qtdeConsumoCarro;
+    }
+
+    public double getConsumo(){
+        return this.consumo;
     }
 
     public Intersecao getIntercesaoOrigem() {
@@ -78,5 +89,9 @@ public class Rua {
 
     public void setDirecao(Direcao direcao) {
         this.direcao = direcao;
+    }
+
+    public int getComprimento() {
+        return comprimento;
     }
 }
