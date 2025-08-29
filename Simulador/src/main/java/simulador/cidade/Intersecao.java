@@ -5,46 +5,68 @@ import simulador.estruturas.NoDuplo;
 import simulador.semaforo.ModoOperacao;
 import simulador.semaforo.Semaforo;
 
-import static simulador.semaforo.ModoOperacao.*;
+import javax.management.openmbean.InvalidKeyException;
+
 
 public class Intersecao {
-    public Rua rua1;
-    public Rua rua2;
     public ListaEncadeada<Semaforo> listaSemaforos = new ListaEncadeada<>();
-    public int id;
-    public int qtdeSemaforos;
-    public int valor;
-    public boolean temSemaforo;
-    public boolean origem;
+    public ListaEncadeada<Rua> listaRuas = new ListaEncadeada<>();
+    public String id;
+    public Double latitude;
+    public Double longitude;
 
-    public Intersecao(int id, int valor, int qtdeSemaforos, boolean temSemaforo) {
+    public Intersecao(String id, Double latitude, Double longitude) {
         this.id = id;
-        this.temSemaforo = temSemaforo;
-        this.qtdeSemaforos = qtdeSemaforos;
-        this.valor = valor;
-    }
-
-    public boolean ehOrigem() {
-        return valor == 1 ? true : false;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public void acionarSemaforos(ModoOperacao modo) throws InterruptedException {
-        Semaforo s1 = new Semaforo(5000, 1000);
-        Semaforo s2 = new Semaforo(5000, 1000);
-
-        listaSemaforos.adicionar(new NoDuplo<>(s1),0);
-        listaSemaforos.adicionar(new NoDuplo<>(s2),1);
+        if (listaSemaforos.estaVazia() || listaRuas.estaVazia()) {
+            throw new InvalidKeyException("LISTA DE SEMAFORO OU RUA ESTÃO NULL");
+        }
 
         switch (modo) {
             case CICLO_FIXO:
                 modo.acionarCicloFixo(this.listaSemaforos);
             case TEMPO_ESPERA:
-                modo.acionarTempoEspera(this.listaSemaforos, this.rua1, this.rua2);
+                modo.acionarTempoEspera(this.listaSemaforos, this.listaRuas);
             case CONSUMO:
-                modo.acionarConsumo(this.listaSemaforos, this.rua1, this.rua2);
+                modo.acionarConsumo(this.listaSemaforos, this.listaRuas);
             default:
                 throw new IllegalStateException("Unexpected value: " + modo);
         }
     }
 
+    public ListaEncadeada<Semaforo> getListaSemaforos() {
+        return listaSemaforos;
+    }
+
+    public void adicionarSemaforo(Semaforo s) {
+        this.listaSemaforos.enfileirar(new NoDuplo<>(s));
+    }
+
+    public ListaEncadeada<Rua> getListaRuas() {
+        return listaRuas;
+    }
+
+    public void adicionarRua(Rua r) {
+        this.listaRuas.enfileirar(new NoDuplo<>(r));
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setSemaforo(boolean b) {
+
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
 }

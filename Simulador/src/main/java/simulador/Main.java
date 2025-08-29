@@ -1,25 +1,32 @@
 package simulador;
 
 import simulador.cidade.Intersecao;
+import simulador.cidade.Grafo;
+import simulador.estruturas.FilaEncadeada;
+import simulador.trafego.Roteador;
+import simulador.trafego.Veiculo;
 
-import static simulador.semaforo.ModoOperacao.CICLO_FIXO;
-
+import java.io.IOException;
+import java.security.InvalidKeyException;
 
 public class Main {
-    public static void main(String[] args) {
-//        Simulador simulador = new Simulador();
-//        simulador.iniciar();
+    public static void main(String[] args) throws InvalidKeyException, IOException, InterruptedException {
+        Grafo mapaMatriz = new Grafo();
 
-//        FAZER INTERCESSEÇÃO COM DOIS SEMÁFOROS E COMUTAR
+        mapaMatriz.conectarRuas();
 
-        Intersecao i1 = new Intersecao(1, 1, 2, true);
+        Roteador roteador = new Roteador();
 
-        try {
-            i1.acionarSemaforos(CICLO_FIXO);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        FilaEncadeada<Intersecao> rota = roteador.gerarRotaValida(mapaMatriz);
+
+        System.out.println(rota.tamanho());
+
+        Veiculo carro = new Veiculo(0, rota);
+        if (!carro.atingiuDestino()) {
+            carro.mover();
         }
 
+        System.out.println("Consumo do carro " + carro + ": " + carro.getConsumo());
+        System.out.println("Tempo de viagem do carro " + carro + ": " + carro.getTempoViagem());
     }
-
 }

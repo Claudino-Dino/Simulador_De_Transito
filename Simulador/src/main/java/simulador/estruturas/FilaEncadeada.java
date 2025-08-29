@@ -1,12 +1,14 @@
 package simulador.estruturas;
 
+import simulador.cidade.Intersecao;
+
 public class FilaEncadeada<T> {
     public No<T> head, tail;
 
-    public FilaEncadeada() {
-        this.head = null;
-        this.tail = null;
-    }
+//    public FilaEncadeada() {
+//        this.head = null;
+//        this.tail = null;
+//    }
 
     public No<T> enfileirar(No<T> novoNo) {
         if (estaVazia()) {
@@ -21,25 +23,31 @@ public class FilaEncadeada<T> {
     }
 
     public No<T> desenfileirar() {
-        try {
-            if (estaVazia()) {
-                throw new NullPointerException("Impossível desenfileirar um objeto em uma fila vazia!");
-            }
-
-            if (this.head.proximo == null) {
-                this.head = null;
-                this.tail = null;
-                return head;
-            }
-
-            No<T> noDesenfileirar = this.head;
-            this.head = this.head.proximo;
-            noDesenfileirar.proximo = null;
-
-            return head;
-        } catch (NullPointerException e) {
-            throw new NullPointerException("FilaEncadeada vazia!");
+        if (estaVazia()) {
+            throw new IllegalStateException("Tentativa de desenfileirar fila vazia");
         }
+
+        No<T> removido = head;
+        head = head.proximo;
+
+        if (head == null) {
+            tail = null;
+        }
+
+        removido.proximo = null;
+        return removido;
+    }
+
+    public T obter(int p) {
+        if (!estaVazia() && p >= 0 && p < tamanho()) {
+            No<T> noAtual = this.head;
+            for (int i = 0; i < p; i++) {
+                noAtual = noAtual.proximo;
+            }
+            return noAtual.conteudo;
+        }
+
+        throw new RuntimeException();
     }
 
     public int tamanho() {
@@ -66,5 +74,11 @@ public class FilaEncadeada<T> {
         return false;
     }
 
+    public No<T> getHead() {
+        return head;
+    }
 
+    public No<T> getTail() {
+        return tail;
+    }
 }
